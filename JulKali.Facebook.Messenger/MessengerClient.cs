@@ -26,7 +26,14 @@ namespace JulKali.Facebook.Messenger
             _client = client;
         }
 
-        public async Task SendText(Recipient recipient, string text, MessageType messageType = MessageType.Standard, MessagingType messagingType = MessagingType.Response)
+        public async Task SendText(
+            Recipient recipient, 
+            string text, 
+            MessageType messageType = MessageType.Standard, 
+            MessagingType messagingType = MessagingType.Response,
+            NotificationType notificationType = NotificationType.Regular,
+            string tag = default
+            )
         {
             string messagingTypeString;
 
@@ -48,15 +55,41 @@ namespace JulKali.Facebook.Messenger
                     throw new MessagingTypeNotSupportedException(messagingType);
             }
 
-            var message = new
+            string notificationTypeString;
+
+            switch (notificationType)
+            {
+                case NotificationType.Regular:
+                    notificationTypeString = "REGULAR";
+                    break;
+
+                case NotificationType.SilentPush:
+                    notificationTypeString = "SILENT_PUSH";
+                    break;
+
+                case NotificationType.NoPush:
+                    notificationTypeString = "NO_PUSH";
+                    break;
+
+                default:
+                    throw new MessagingTypeNotSupportedException(messagingType);
+            }
+
+            dynamic message = new
             {
                 messaging_type = messagingTypeString,
                 recipient = recipient.ToRecipientJsonObject(),
+                notification_type = notificationTypeString,
                 message = new
                 {
                     text
                 }
             };
+
+            if (tag != default)
+            {
+                message.tag = tag;
+            }
 
             await _client.Post<object>(ApiUri, message);
         }
