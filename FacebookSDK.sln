@@ -10,9 +10,38 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Meta", "Meta", "{762B8C51-B
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JulKali.Facebook.Api", "JulKali.FaceBook.Api\JulKali.Facebook.Api.csproj", "{035FF604-335C-4C62-A619-E8A648434831}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{7240D4A0-2DFC-4D6F-894A-15B6D6E9F208}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessengerTests", "MessengerTests\MessengerTests.csproj", "{619826FC-8101-4086-A54C-688CDE003634}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JulKali.Facebook.Messenger", "JulKali.FaceBook.Messenger\JulKali.Facebook.Messenger.csproj", "{1E587CED-7500-4CCA-972E-52683BB6AAB0}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{035FF604-335C-4C62-A619-E8A648434831}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{035FF604-335C-4C62-A619-E8A648434831}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{035FF604-335C-4C62-A619-E8A648434831}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{035FF604-335C-4C62-A619-E8A648434831}.Release|Any CPU.Build.0 = Release|Any CPU
+		{619826FC-8101-4086-A54C-688CDE003634}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{619826FC-8101-4086-A54C-688CDE003634}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{619826FC-8101-4086-A54C-688CDE003634}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{619826FC-8101-4086-A54C-688CDE003634}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E587CED-7500-4CCA-972E-52683BB6AAB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E587CED-7500-4CCA-972E-52683BB6AAB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E587CED-7500-4CCA-972E-52683BB6AAB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E587CED-7500-4CCA-972E-52683BB6AAB0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{619826FC-8101-4086-A54C-688CDE003634} = {7240D4A0-2DFC-4D6F-894A-15B6D6E9F208}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {45F05791-2C36-46DE-8827-48B410BBB1F0}
