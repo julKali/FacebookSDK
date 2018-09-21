@@ -5,10 +5,14 @@ namespace JulKali.Facebook.Messenger
 {
     public class MessengerClient
     {
+        private const string ApiEndpoint = "https://graph.facebook.com/me/messages";
+
+
         private readonly string _accessToken;
         private readonly FacebookApiClient _client;
 
-        private const string ApiEndpoint = "https://graph.facebook.com/me/messages";
+        private string ApiUri => $"{ApiEndpoint}?access_token={_accessToken}";
+
 
         public MessengerClient(string accessToken)
         {
@@ -22,7 +26,7 @@ namespace JulKali.Facebook.Messenger
             _client = client;
         }
 
-        public async Task<bool> SendText(Recipient recipient, string text, MessageType messageType = MessageType.Standard, MessagingType messagingType = MessagingType.Response)
+        public async Task SendText(Recipient recipient, string text, MessageType messageType = MessageType.Standard, MessagingType messagingType = MessagingType.Response)
         {
             string messagingTypeString;
 
@@ -54,7 +58,35 @@ namespace JulKali.Facebook.Messenger
                 }
             };
 
-            return await PostToEndpoint(message);
+            await _client.Post<object>(ApiUri, message);
+        }
+
+        public async Task SendAction(Recipient recipient, SenderAction action)
+        {
+            dynamic message = new
+            {
+                recipient = recipient.ToRecipientJsonObject()
+            };
+
+            switch (action)
+            {
+                case SenderAction.TypingOn:
+                    message.sender_action = "typing_on";
+                    break;
+
+                case SenderAction.TypingOff:
+                    message.sender_action = "typing_off";
+                    break;
+
+                case SenderAction.MarkAsSeen:
+                    message.sender_action = "mark_seen";
+                    break;
+
+                default:
+                    throw new SenderActionNotSupportedException(action);
+            }
+
+            await _client.Post<object>(ApiUri, message);
         }
     }
 }
