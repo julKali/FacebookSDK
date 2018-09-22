@@ -19,16 +19,29 @@ namespace JulKali.Facebook.Api
             _client = client;
         }
 
-        public async Task<T> Post<T>(string url, object data)
+        public async Task<ResponseObject<TSuccess, TError>> Post<TSuccess, TError>(string url, object data) 
+            where TSuccess : IEntity 
+            where TError : IEntity
         {
             var response = await _client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json"));
 
+            var responseObj = new ResponseObject<TSuccess, TError>
+            {
+                HttpCode = response.StatusCode
+            };
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+
             if (response.IsSuccessStatusCode)
             {
-                return JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync());
+                responseObj.Success = JsonConvert.DeserializeObject<TSuccess>(responseContent);
+            }
+            else
+            {
+                responseObj.Error = JsonConvert.DeserializeObject<TError>(responseContent);
             }
 
-            return default;
+            return responseObj;
         } 
     }
 }
