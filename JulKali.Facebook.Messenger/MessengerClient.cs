@@ -1,5 +1,8 @@
 ﻿using System.Threading.Tasks;
 using JulKali.Facebook.Api;
+using JulKali.Facebook.Entities;
+using JulKali.Facebook.Messenger.Entities;
+using JulKali.Facebook.Messenger.Send;
 
 namespace JulKali.Facebook.Messenger
 {
@@ -26,7 +29,7 @@ namespace JulKali.Facebook.Messenger
             _client = client;
         }
 
-        public async Task SendText(
+        public async Task<string> SendText(
             Recipient recipient, 
             string text, 
             MessageType messageType = MessageType.Standard, 
@@ -88,38 +91,52 @@ namespace JulKali.Facebook.Messenger
 
             if (tag != default)
             {
-                message.tag = tag;
+                message.tag = tag; // doesnt work, will fix later
             }
 
-            await _client.Post<object>(ApiUri, message);
+            var result = await _client.Post<SendMessageResponse, MessengerErrorEntity>(ApiUri, (object) message);
+
+            if (result.Error != null)
+            {
+                throw new MessengerRequestFailedException("text", ApiUri, result.HttpCode, result.Error.Code, result.Error.Message, result.Error.TraceId, result.Error.SubCode);
+            }
+
+            return result.Success.MessageId;
         }
 
         public async Task SendAction(Recipient recipient, SenderAction action)
         {
-            dynamic message = new
+            var message = new SenderActionMessage
             {
-                recipient = recipient.ToRecipientJsonObject()
+                Recipient = recipient.ToRecipientJsonObject()
             };
 
             switch (action)
             {
                 case SenderAction.TypingOn:
-                    message.sender_action = "typing_on";
+                    message.SenderAction = "typing_on";
                     break;
 
                 case SenderAction.TypingOff:
-                    message.sender_action = "typing_off";
+                    message.SenderAction = "typing_off";
                     break;
 
                 case SenderAction.MarkAsSeen:
-                    message.sender_action = "mark_seen";
+                    message.SenderAction = "mark_seen";
                     break;
 
                 default:
                     throw new SenderActionNotSupportedException(action);
             }
 
-            await _client.Post<object>(ApiUri, message);
+            var result = await _client.Post<SendMessageResponse, MessengerErrorEntity>(ApiUri, message);
+
+            if (result.Error != null)
+            {
+                throw new MessengerRequestFailedException("text", ApiUri, result.HttpCode, result.Error.Code, result.Error.Message, result.Error.TraceId, result.Error.SubCode);
+            }
+
+            return;
         }
     }
 }
