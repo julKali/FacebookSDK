@@ -3,6 +3,9 @@ using System.Net;
 
 namespace JulKali.Facebook.Messenger
 {
+    /// <summary>
+    /// Thrown if the API request returned an error.
+    /// </summary>
     public class MessengerRequestFailedException : Exception
     {
         public MessengerRequestFailedException()
