@@ -1,4 +1,4 @@
-﻿namespace JulKali.Facebook.Messenger
+﻿namespace JulKali.Facebook.Messenger.Send
 {
     public class UserReferenceRecipient : Recipient
     {
