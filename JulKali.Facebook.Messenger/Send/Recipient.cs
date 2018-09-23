@@ -1,4 +1,6 @@
-﻿namespace JulKali.Facebook.Messenger.Send
+﻿using JulKali.Facebook.Entities;
+
+namespace JulKali.Facebook.Messenger.Send
 {
     /// <summary>
     /// Represents the root class for all kinds of message recipients. Cannot be used in any other way but as a parent class.
@@ -12,6 +14,6 @@
             Identifier = identifier;
         }
 
-        public abstract object ToRecipientJsonObject();
+        internal abstract RecipientEntity ToRecipientEntity();
     }
 }

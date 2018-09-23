@@ -1,4 +1,6 @@
-﻿namespace JulKali.Facebook.Messenger.Send
+﻿using JulKali.Facebook.Entities;
+
+namespace JulKali.Facebook.Messenger.Send
 {
     /// <summary>
     /// Represents a recipient that is identified by user reference.
@@ -14,11 +16,11 @@
         {
         }
 
-        public override object ToRecipientJsonObject()
+        internal override RecipientEntity ToRecipientEntity()
         {
-            return new
+            return new RecipientEntity
             {
-                user_ref = Identifier
+                UserReference = Identifier
             };
         }
     }

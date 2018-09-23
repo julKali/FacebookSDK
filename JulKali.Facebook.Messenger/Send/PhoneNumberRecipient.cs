@@ -1,4 +1,6 @@
-﻿namespace JulKali.Facebook.Messenger.Send
+﻿using JulKali.Facebook.Entities;
+
+namespace JulKali.Facebook.Messenger.Send
 {
     /// <summary>
     /// Represents a recipient that is identified by phone number.
@@ -32,24 +34,24 @@
             _nameSupplied = true;
         }
 
-        public override object ToRecipientJsonObject()
+        internal override RecipientEntity ToRecipientEntity()
         {
             if (_nameSupplied)
             {
-                return new
+                return new RecipientEntity
                 {
-                    phone_number = Identifier,
-                    name = new
+                    PhoneNumber = Identifier,
+                    Name = new RecipientNameEntity
                     {
-                        first_name = _firstName,
-                        last_name = _lastName
+                        FirstName = _firstName,
+                        LastName = _lastName
                     }
                 };
             }
 
-            return new
+            return new RecipientEntity
             {
-                phone_number = Identifier
+                PhoneNumber = Identifier
             };
         }
     }
