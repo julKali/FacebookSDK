@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace JulKali.Facebook.Entities
 {
-    public class MessengerErrorEntity : IEntity
+    internal class MessengerErrorEntity : IEntity
     {
         [JsonProperty("message")]
         public string Message { get; set; }
