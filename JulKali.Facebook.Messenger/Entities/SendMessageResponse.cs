@@ -10,5 +10,8 @@ namespace JulKali.Facebook.Entities
 
         [JsonProperty("message_id")]
         public string MessageId { get; set; }
+
+        [JsonProperty("attachment_id")]
+        public string AttachmentId { get; set; }
     }
 }

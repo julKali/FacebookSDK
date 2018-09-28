@@ -5,14 +5,14 @@ namespace JulKali.Facebook.Entities
 {
     internal class MessageEntity
     {
-        [JsonProperty("text")]
+        [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
         public string Text { get; set; }
 
-        [JsonProperty("attachment")]
+        [JsonProperty("attachment", NullValueHandling = NullValueHandling.Ignore)]
         public IMessageAttachmentEntity Attachment { get; set; }
 
         [JsonProperty("quick_replies", NullValueHandling = NullValueHandling.Ignore)]
-        public QuickReplyEntity[] QuickReplies { get; set; }
+        public IList<QuickReplyEntity> QuickReplies { get; set; }
 
         [JsonProperty("metadata", NullValueHandling = NullValueHandling.Ignore)]
         public string Metadata { get; set; }

@@ -1,4 +1,6 @@
-﻿namespace JulKali.Facebook.Entities
+﻿using System.Collections.Generic;
+
+namespace JulKali.Facebook.Entities
 {
     internal class ListTemplatePayloadEntity : ITemplatePayloadEntity
     {
@@ -8,10 +10,10 @@
         public string TopElementStyle { get; set; }
 
         // optional, max 1
-        public IButtonEntity[] Buttons { get; set; }
+        public IList<IButtonEntity> Buttons { get; set; }
 
         // min 2, max 4
-        public ElementEntity[] Elements { get; set; }
+        public IList<ElementEntity> Elements { get; set; }
 
         // optional
         public bool Shareable { get; set; }

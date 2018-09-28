@@ -1,12 +1,18 @@
-﻿namespace JulKali.Facebook.Entities
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
+
+namespace JulKali.Facebook.Entities
 {
     internal class MediaTemplatePayloadEntity : ITemplatePayloadEntity
     {
+        [JsonProperty("template_type")]
         public string TemplateType { get; } = "media";
 
         // excatly 1 element
-        public MediaElementEntity[] Elements { get; set; }
+        [JsonProperty("elements")]
+        public IList<MediaElementEntity> Elements { get; set; }
 
-        public bool Shareable { get; set; }
+        [JsonProperty("sharable", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? Shareable { get; set; }
     }
 }

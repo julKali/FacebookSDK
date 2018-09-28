@@ -8,6 +8,6 @@ namespace JulKali.Facebook.Entities
         public string Type { get; } = "template";
 
         [JsonProperty("payload")]
-        public ITemplatePayloadEntity TemplatePayload { get; set; }
+        public ITemplatePayloadEntity Payload { get; set; }
     }
 }

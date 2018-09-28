@@ -1,10 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace JulKali.Facebook.Entities
 {
     internal class MediaElementEntity
     {
         // [image, video]
+        [JsonProperty("media_type")]
         public string MediaType { get; set; }
 
         // either url or attachment
@@ -15,6 +17,7 @@ namespace JulKali.Facebook.Entities
         public string AttachmentId { get; set; }
 
         // optional, max 1 button
-        public PostbackButtonEntity[] Buttons { get; set; }
+        [JsonProperty("buttons", NullValueHandling = NullValueHandling.Ignore)]
+        public IEnumerable<IButtonEntity> Buttons { get; set; }
     }
 }
