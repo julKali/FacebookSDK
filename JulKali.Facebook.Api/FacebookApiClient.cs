@@ -41,7 +41,9 @@ namespace JulKali.Facebook.Api
             where TSuccess : IEntity 
             where TError : IEntity
         {
-            var response = await _client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json"));
+            var serializedData = JsonConvert.SerializeObject(data);
+
+            var response = await _client.PostAsync(url, new StringContent(serializedData, Encoding.UTF8, "application/json"));
 
             var responseObj = new ResponseObject<TSuccess, TError>
             {
