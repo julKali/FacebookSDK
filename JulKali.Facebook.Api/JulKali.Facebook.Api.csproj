@@ -2,14 +2,27 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Description>Contains core code for other JulKali.Facebook packages.</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageTags>Facebook API</PackageTags>
+    <RepositoryUrl>https://github.com/julKali/FacebookSDK.git</RepositoryUrl>
+    <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
+    <Authors>Julian Kalitzke</Authors>
+    <Company />
+    <PackageLicenseUrl>https://raw.githubusercontent.com/julKali/FacebookSDK/master/LICENSE</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <Copyright>Copyright © Julian Kalitzke 2018</Copyright>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <LangVersion>7.3</LangVersion>
+    <DocumentationFile>bin\Release\netcoreapp2.1\JulKali.Facebook.Api.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <LangVersion>7.3</LangVersion>
+    <DocumentationFile>bin\Debug\netcoreapp2.1\JulKali.Facebook.Api.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
