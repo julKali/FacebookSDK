@@ -34,7 +34,8 @@ namespace JulKali.Facebook.Messenger.Send
             _nameSupplied = true;
         }
 
-        internal override RecipientEntity ToRecipientEntity()
+        /// <inheritdoc />
+        internal override RecipientEntity ToEntity()
         {
             if (_nameSupplied)
             {

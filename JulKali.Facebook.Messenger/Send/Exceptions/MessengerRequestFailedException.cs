@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace JulKali.Facebook.Messenger
+namespace JulKali.Facebook.Messenger.Send.Exceptions
 {
     /// <summary>
     /// Thrown if the API request returned an error.

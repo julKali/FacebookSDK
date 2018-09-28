@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using JulKali.Facebook.Api;
 using JulKali.Facebook.Entities;
-using JulKali.Facebook.Messenger.Entities;
 using JulKali.Facebook.Messenger.Send;
+using JulKali.Facebook.Messenger.Send.Exceptions;
 
 namespace JulKali.Facebook.Messenger
 {
@@ -20,7 +21,7 @@ namespace JulKali.Facebook.Messenger
         private readonly string _accessToken;
         private readonly FacebookApiClient _client;
 
-        private string ApiUri => $"{ApiEndpoint}?access_token={_accessToken}";
+        private Uri ApiUri => new Uri($"{ApiEndpoint}?access_token={_accessToken}");
 
         /// <summary>
         /// Initializes a new <see cref="MessengerClient"/> instance.
@@ -44,25 +45,66 @@ namespace JulKali.Facebook.Messenger
         }
 
         /// <summary>
-        /// Sends a text message to a recipient via Facebook Messenger.
+        /// Sends a sender action to a recipient via Facebook Messenger.
+        /// </summary>
+        /// <param name="recipient">The recipient in form of a valid <see cref="Recipient"/> subclass.</param>
+        /// <param name="action">The sender action.</param>
+        /// <returns></returns>
+        public async Task SendAction(Recipient recipient, SenderAction action)
+        {
+            var message = new SendRequestContainerEntity
+            {
+                Recipient = recipient.ToEntity()
+            };
+
+            switch (action)
+            {
+                case SenderAction.TypingOn:
+                    message.SenderAction = "typing_on";
+                    break;
+
+                case SenderAction.TypingOff:
+                    message.SenderAction = "typing_off";
+                    break;
+
+                case SenderAction.MarkAsSeen:
+                    message.SenderAction = "mark_seen";
+                    break;
+
+                default:
+                    throw new SenderActionNotSupportedException(action);
+            }
+
+            var result = await _client.Post<SendMessageResponse, MessengerErrorWrapperEntity>(ApiUri.ToString(), message);
+
+            if (result.Error != null)
+            {
+                throw new MessengerRequestFailedException("text", ApiUri.GetLeftPart(UriPartial.Path), result.HttpCode, result.Error.MessengerError.Code,
+                    result.Error.MessengerError.Message, result.Error.MessengerError.TraceId, result.Error.MessengerError.SubCode);
+            }
+        }
+
+        /// <summary>
+        /// Sends a message to a recipient via Facebook Messenger.
         /// </summary>
         /// <param name="recipient">The message recipient. Must be a valid <see cref="Recipient"/> subclass.</param>
-        /// <param name="text">The message text.</param>
+        /// <param name="message">The completed message.</param>
         /// <param name="messageType">The message type. Defaults to <see cref="MessageType.Standard"/>.</param>
         /// <param name="messagingType">The messaging type. Defaults to <see cref="MessagingType.Response"/>.</param>
         /// <param name="notificationType">The notification type. Defaults to <see cref="NotificationType.Regular"/>.</param>
         /// <param name="tag">An optional message reference tag.</param>
         /// <returns>The id of the sent message.</returns>
-        /// <exception cref="MessengerRequestFailedException">Thrown if the API request returned an error.</exception>
-        public async Task<string> SendText(
-            Recipient recipient, 
-            string text, 
-            MessageType messageType = MessageType.Standard, 
+        public async Task<string> SendMessage(
+            Recipient recipient,
+            CompletedMessage message,
+            MessageType messageType = MessageType.Standard,
             MessagingType messagingType = MessagingType.Response,
             NotificationType notificationType = NotificationType.Regular,
             string tag = default
             )
         {
+            //todo: split messages every 2000 characters
+
             string messagingTypeString;
 
             switch (messagingType)
@@ -103,75 +145,32 @@ namespace JulKali.Facebook.Messenger
                     throw new MessagingTypeNotSupportedException(messagingType);
             }
 
-            dynamic message = new
+            var requestContainer = new SendRequestContainerEntity
             {
-                messaging_type = messagingTypeString,
-                recipient = recipient.ToRecipientJsonObject(),
-                notification_type = notificationTypeString,
-                message = new
-                {
-                    text
-                }
+                MessagingType = messagingTypeString,
+                Recipient = recipient.ToEntity(),
+                NotificationType = notificationTypeString,
+                Message = message.GetMessageEntity()
             };
 
             if (tag != default)
             {
-                message.tag = tag; // doesnt work, will fix later
+                requestContainer.Tag = tag;
             }
 
             if (messageType == MessageType.Subscription)
             {
-                message.tag = "NON_PROMOTIONAL_SUBSCRIPTION";
+                requestContainer.Tag = "NON_PROMOTIONAL_SUBSCRIPTION";
             }
 
-            var result = await _client.Post<SendMessageResponse, MessengerErrorEntity>(ApiUri, (object) message);
+            var result = await _client.Post<SendMessageResponse, MessengerErrorWrapperEntity>(ApiUri.ToString(), requestContainer);
 
             if (result.Error != null)
             {
-                throw new MessengerRequestFailedException("text", ApiUri, result.HttpCode, result.Error.Code, result.Error.Message, result.Error.TraceId, result.Error.SubCode);
+                throw new MessengerRequestFailedException("text", ApiUri.GetLeftPart(UriPartial.Path), result.HttpCode, result.Error.MessengerError.Code, result.Error.MessengerError.Message, result.Error.MessengerError.TraceId, result.Error.MessengerError.SubCode);
             }
 
             return result.Success.MessageId;
-        }
-
-        /// <summary>
-        /// Sends a sender action to a recipient via Facebook Messenger.
-        /// </summary>
-        /// <param name="recipient">The recipient in form of a valid <see cref="Recipient"/> subclass.</param>
-        /// <param name="action">The sender action.</param>
-        /// <returns></returns>
-        public async Task SendAction(Recipient recipient, SenderAction action)
-        {
-            var message = new SenderActionMessage
-            {
-                Recipient = recipient.ToRecipientJsonObject()
-            };
-
-            switch (action)
-            {
-                case SenderAction.TypingOn:
-                    message.SenderAction = "typing_on";
-                    break;
-
-                case SenderAction.TypingOff:
-                    message.SenderAction = "typing_off";
-                    break;
-
-                case SenderAction.MarkAsSeen:
-                    message.SenderAction = "mark_seen";
-                    break;
-
-                default:
-                    throw new SenderActionNotSupportedException(action);
-            }
-
-            var result = await _client.Post<SendMessageResponse, MessengerErrorEntity>(ApiUri, message);
-
-            if (result.Error != null)
-            {
-                throw new MessengerRequestFailedException("text", ApiUri, result.HttpCode, result.Error.Code,
-                    result.Error.Message, result.Error.TraceId, result.Error.SubCode);
-            }
         }
     }
 }

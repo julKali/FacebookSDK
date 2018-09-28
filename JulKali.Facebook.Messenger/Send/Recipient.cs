@@ -14,6 +14,10 @@ namespace JulKali.Facebook.Messenger.Send
             Identifier = identifier;
         }
 
-        internal abstract RecipientEntity ToRecipientEntity();
+        /// <summary>
+        /// Returns the recipient as a <see cref="RecipientEntity"/> object.
+        /// </summary>
+        /// <returns></returns>
+        internal abstract RecipientEntity ToEntity();
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace JulKali.Facebook.Messenger.Send
+namespace JulKali.Facebook.Messenger.Send.Exceptions
 {
     /// <summary>
     /// Thrown if the specified <see cref="SenderAction"/> is not supported.
