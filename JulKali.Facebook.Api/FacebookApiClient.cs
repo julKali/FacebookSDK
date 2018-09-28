@@ -36,7 +36,7 @@ namespace JulKali.Facebook.Api
         /// <typeparam name="TError">Type of the JSON encoded response content if request was not successful.</typeparam>
         /// <param name="url">The absolute Facebook API endpoint.</param>
         /// <param name="data">Data to be sent to the endpoint.</param>
-        /// <returns>A <see cref="ResponseObject{TSuccess,TError}"/> instance. Either the <see cref="TSuccess"/> or the <see cref="TError"/> field is null.</returns>
+        /// <returns>A <see cref="ResponseObject{TSuccess,TError}"/> instance. Either the Success or Error field is null.</returns>
         public async Task<ResponseObject<TSuccess, TError>> Post<TSuccess, TError>(string url, object data) 
             where TSuccess : IEntity 
             where TError : IEntity
