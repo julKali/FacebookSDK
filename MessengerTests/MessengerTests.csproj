@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JulKali.FaceBook.Messenger\JulKali.Facebook.Messenger.csproj" />
+    <PackageReference Include="JulKali.Facebook.Messenger" Version="1.0.0" />
   </ItemGroup>
 
 </Project>
